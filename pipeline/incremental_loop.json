@@ -19,7 +19,7 @@
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "last_cdc",
+									"activity": "Lookup1",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -93,7 +93,7 @@
 							]
 						},
 						{
-							"name": "last_cdc",
+							"name": "Lookup1",
 							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
@@ -209,7 +209,7 @@
 										"type": "Copy",
 										"dependsOn": [
 											{
-												"activity": "max_cdc",
+												"activity": "Script1",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -285,7 +285,7 @@
 										]
 									},
 									{
-										"name": "max_cdc",
+										"name": "Script1",
 										"type": "Script",
 										"dependsOn": [],
 										"policy": {
