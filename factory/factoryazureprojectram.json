@@ -1,0 +1,9 @@
+{
+	"name": "factoryazureprojectram",
+	"location": "centralus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "6c0890a1-85d8-452a-8af9-885c445dc5f8",
+		"tenantId": "ab153b9f-2c75-48bd-95c3-84fedcc2b491"
+	}
+}
