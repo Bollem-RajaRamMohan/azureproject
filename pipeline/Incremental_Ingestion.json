@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "Incremental_Ingestion",
 	"properties": {
 		"activities": [
 			{
@@ -7,13 +7,13 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "last_cdc",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "Set variable1",
+						"activity": "current",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -81,7 +81,7 @@
 				]
 			},
 			{
-				"name": "Lookup1",
+				"name": "last_cdc",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -109,7 +109,10 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container": "bronze",
-							"folder": "cdc",
+							"folder": {
+								"value": "@{pipeline().parameters.table}_cdc",
+								"type": "Expression"
+							},
 							"file": "cdc.json"
 						}
 					},
@@ -117,7 +120,7 @@
 				}
 			},
 			{
-				"name": "Set variable1",
+				"name": "current",
 				"type": "SetVariable",
 				"dependsOn": [],
 				"policy": {
@@ -152,7 +155,7 @@
 					},
 					"ifFalseActivities": [
 						{
-							"name": "Delete1",
+							"name": "deleteEmptyFile",
 							"type": "Delete",
 							"dependsOn": [],
 							"policy": {
@@ -187,11 +190,11 @@
 					],
 					"ifTrueActivities": [
 						{
-							"name": "Copy data1",
+							"name": "update_last_cdc",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Script1",
+									"activity": "max_cdc",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -243,7 +246,10 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"container": "bronze",
-										"folder": "cdc",
+										"folder": {
+											"value": "@{pipeline().parameters.table}_cdc",
+											"type": "Expression"
+										},
 										"file": "empty.json"
 									}
 								}
@@ -254,14 +260,17 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"container": "bronze",
-										"folder": "cdc",
+										"folder": {
+											"value": "@{pipeline().parameters.table}_cdc",
+											"type": "Expression"
+										},
 										"file": "cdc.json"
 									}
 								}
 							]
 						},
 						{
-							"name": "Script1",
+							"name": "max_cdc",
 							"type": "Script",
 							"dependsOn": [],
 							"policy": {
